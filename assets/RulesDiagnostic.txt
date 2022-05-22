@@ -1,0 +1,23 @@
+R1 : IF (Orina(¿Usted presenta orina constante?)) THEN Orina
+R2 : IF (Orina AND Sed(¿Usted presenta sed constante?)) THEN Sed
+R3 : IF (Sed AND Hambre(¿Usted presenta hambre excesiva?)) THEN Hambre
+R4 : IF (Hambre AND PerdidaPeso(¿Usted presenta perdida de peso inexplicable?)) THEN PerdidaPeso
+R5 : IF (PerdidaPeso AND Fatiga(¿Usted presenta aumento de fatiga y debilidad?)) THEN Fatiga
+R6 : IF (Fatiga AND Irritacion(¿Usted presenta irritación?)) THEN Irritacion
+R7 : IF (Irritacion AND VisionBorrosa(¿Usted presenta visión borrosa?)) THEN Diabetes
+R8 : IF (No Orina AND ArdorEstomago(¿Usted presenta ardor en el estomago?)) THEN ArdorEstomago
+R9 : IF (ArdorEstomago AND PerdidaPeso(¿Usted presenta perdida de peso?)) THEN PerdidaPeso
+R10 : IF (PerdidaPeso AND Nauseas(¿Usted presenta nauseas?)) THEN Nauseas
+R11 : IF (Nauseas AND Hipo(¿Usted presenta hipo?)) THEN Hipo
+R12 : IF (Hipo AND Eructos(¿Usted presenta eructos?)) THEN Eructos
+R13 : IF (Eructos AND Gases(¿Usted presenta gases?)) THEN Gases
+R14 : IF (Gases AND MalSabor(¿Usted presenta mal sabor de boca?)) THEN MalSabor
+R15 : IF (MalSabor AND Vomito(¿Usted presenta vomitos?)) THEN Vomito
+R15 : IF (Vomito AND VacioGastrico(¿Usted presenta sensacion de vacio gastrico?)) THEN Gastritis
+R16 : IF (No ArdorEstomago AND Hinchazon(¿Usted presenta hinchazon en extremidades?)) THEN Hinchazon
+R17 : IF (Hinchazon AND Mareo(¿Usted presenta perdida de equilibrio o mareo?)) THEN Mareo
+R18 : IF (Mareo AND DolorCabeza(¿Usted presenta dolor de cabeza?)) THEN DolorCabeza
+R19 : IF (DolorCabeza AND OjosAmarillos(¿Usted presenta ojos amarillos?)) THEN OjosAmarillos
+R20 : IF (OjosAmarillos AND VisionBorrosa(¿Usted presenta visión borrosa?)) THEN VisionBorrosa
+R21 : IF (VisionBorrosa AND Agitacion(¿Usted presenta agitacion al realizar actividades leves?)) THEN Agitacion
+R22 : IF (Agitacion AND DolorPecho(¿Usted presenta dolor en el pecho?)) THEN Colesterol

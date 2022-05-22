@@ -1,7 +1,11 @@
 package UI;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
 import static javax.swing.JOptionPane.YES_NO_OPTION;
+
+import java.awt.Image;
 
 /**
  * Class that represents the user interface of the diagnosis expert system.
@@ -55,8 +59,8 @@ public class DiagnosticForm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Freestyle Script", 0, 30)); // NOI18N
         jLabel2.setText("Diagnostico de Enfermedades");
-
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/doct.png"))); // NOI18N
+        
+        jLabel4.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/img/Doctor.png")).getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Freestyle Script", 0, 24)); // NOI18N
         jLabel5.setText("Diabetes -Gastritis-Colesterol");
@@ -314,20 +318,20 @@ public class DiagnosticForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(formularioSE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(formularioSE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(formularioSE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(formularioSE.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new formularioSE().setVisible(true);
+                new DiagnosticForm().setVisible(true);
             }
         });
     }

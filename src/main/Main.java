@@ -1,7 +1,10 @@
 package main;
 
+import UI.DiagnosticForm;
+
 public class Main {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        DiagnosticForm diagnosticForm = new DiagnosticForm();
+        diagnosticForm.setVisible(true);
     }
 }
