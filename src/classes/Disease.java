@@ -2,6 +2,12 @@ package classes;
 
 import java.util.List;
 
+/**
+ * Class representing a disease.
+ * 
+ * @author Jose Cruz & Camilo Gómez
+ * @version 1.0
+ */
 public class Disease {
     private String name;
     private List<Symptoms> symptoms;

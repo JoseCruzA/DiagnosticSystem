@@ -7,6 +7,12 @@ import java.util.List;
 import classes.Symptoms;
 import classes.Disease;
 
+/**
+ * Class for the repository of diseases.
+ * 
+ * @author Jose Cruz & Camilo Gómez
+ * @version 1.0
+ */
 public class DiseaseRepository {
     
     public List<Disease> addDiseases() {
