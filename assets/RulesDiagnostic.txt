@@ -1,23 +1,26 @@
-R1 : IF (Orina(¿Usted presenta orina constante?)) THEN Orina
-R2 : IF (Orina AND Sed(¿Usted presenta sed constante?)) THEN Sed
-R3 : IF (Sed AND Hambre(¿Usted presenta hambre excesiva?)) THEN Hambre
-R4 : IF (Hambre AND PerdidaPeso(¿Usted presenta perdida de peso inexplicable?)) THEN PerdidaPeso
-R5 : IF (PerdidaPeso AND Fatiga(¿Usted presenta aumento de fatiga y debilidad?)) THEN Fatiga
-R6 : IF (Fatiga AND Irritacion(¿Usted presenta irritación?)) THEN Irritacion
-R7 : IF (Irritacion AND VisionBorrosa(¿Usted presenta visión borrosa?)) THEN Diabetes
-R8 : IF (No Orina AND ArdorEstomago(¿Usted presenta ardor en el estomago?)) THEN ArdorEstomago
-R9 : IF (ArdorEstomago AND PerdidaPeso(¿Usted presenta perdida de peso?)) THEN PerdidaPeso
-R10 : IF (PerdidaPeso AND Nauseas(¿Usted presenta nauseas?)) THEN Nauseas
-R11 : IF (Nauseas AND Hipo(¿Usted presenta hipo?)) THEN Hipo
-R12 : IF (Hipo AND Eructos(¿Usted presenta eructos?)) THEN Eructos
-R13 : IF (Eructos AND Gases(¿Usted presenta gases?)) THEN Gases
-R14 : IF (Gases AND MalSabor(¿Usted presenta mal sabor de boca?)) THEN MalSabor
-R15 : IF (MalSabor AND Vomito(¿Usted presenta vomitos?)) THEN Vomito
-R15 : IF (Vomito AND VacioGastrico(¿Usted presenta sensacion de vacio gastrico?)) THEN Gastritis
-R16 : IF (No ArdorEstomago AND Hinchazon(¿Usted presenta hinchazon en extremidades?)) THEN Hinchazon
-R17 : IF (Hinchazon AND Mareo(¿Usted presenta perdida de equilibrio o mareo?)) THEN Mareo
-R18 : IF (Mareo AND DolorCabeza(¿Usted presenta dolor de cabeza?)) THEN DolorCabeza
-R19 : IF (DolorCabeza AND OjosAmarillos(¿Usted presenta ojos amarillos?)) THEN OjosAmarillos
-R20 : IF (OjosAmarillos AND VisionBorrosa(¿Usted presenta visión borrosa?)) THEN VisionBorrosa
-R21 : IF (VisionBorrosa AND Agitacion(¿Usted presenta agitacion al realizar actividades leves?)) THEN Agitacion
-R22 : IF (Agitacion AND DolorPecho(¿Usted presenta dolor en el pecho?)) THEN Colesterol
+R1 : IF (CONSTANTURINE(¿Usted presenta orina constante?)) THEN CONSTANTURINE
+R2 : IF (CONSTANTURINE AND CONSTANTTHIRST(¿Usted presenta sed constante?)) THEN CONSTANTTHIRST
+R3 : IF (CONSTANTURINE AND EXCESIVEHUNGER(¿Usted presenta hambre excesiva?)) THEN EXCESIVEHUNGER
+R4 : IF (CONSTANTURINE AND WEIGHTLOSS(¿Usted presenta perdida de peso inexplicable?)) THEN WEIGHTLOSS
+R5 : IF (CONSTANTURINE AND FATIGUE(¿Usted presenta aumento de fatiga y debilidad?)) THEN FATIGUE
+R6 : IF (CONSTANTURINE AND IRRITATION(¿Usted presenta irritación?)) THEN IRRITATION
+R7 : IF (CONSTANTURINE AND BLURREDVISION(¿Usted presenta visión borrosa?)) THEN BLURREDVISION
+R8 : IF (CONSTANTURINE AND CONSTANTTHIRST AND WEIGHTLOSS AND FATIGUE AND IRRITATION AND BLURREDVISION) THEN Diabetes
+R9 : IF (!CONSTANTURINE AND HEARTBURN(¿Usted presenta ardor en el estomago?)) THEN HEARTBURN
+R10 : IF (HEARTBURN AND WEIGHTLOSS(¿Usted presenta perdida de peso?)) THEN WEIGHTLOSS
+R11 : IF (HEARTBURN AND NAUSEA(¿Usted presenta nauseas?)) THEN NAUSEA
+R12 : IF (HEARTBURN AND HICCUP(¿Usted presenta hipo?)) THEN HICCUP
+R13 : IF (HEARTBURN AND BELCHING(¿Usted presenta eructos?)) THEN BELCHING
+R14 : IF (HEARTBURN AND STOMACHGASES(¿Usted presenta gases?)) THEN STOMACHGASES
+R15 : IF (HEARTBURN AND BADMOUTHTASTE(¿Usted presenta mal sabor de boca?)) THEN BADMOUTHTASTE
+R16 : IF (HEARTBURN AND VOMITING(¿Usted presenta vomito?)) THEN VOMITING
+R17 : IF (HEARTBURN AND GASTRICVACUUM(¿Usted presenta sensacion de vacio gastrico?)) THEN GASTRICVACUUM
+R18 : IF (HEARTBURN AND NAUSEA AND HICCUP AND BELCHING AND STOMACHGASES AND BADMOUTHTASTE AND VOMITING AND GASTRICVACUUM) THEN Gastritis
+R19 : IF (!HEARTBURN AND SWELLING(¿Usted presenta hinchazon en extremidades?)) THEN SWELLING
+R20 : IF (SWELLING AND BALANCELOSS(¿Usted presenta perdida de equilibrio o mareo?)) THEN BALANCELOSS
+R21 : IF (SWELLING AND HEADACHE(¿Usted presenta dolor de cabeza?)) THEN HEADACHE
+R22 : IF (SWELLING AND YELLOWEYES(¿Usted presenta ojos amarillos?)) THEN YELLOWEYES
+R23 : IF (SWELLING AND BLURREDVISION(¿Usted presenta visión borrosa?)) THEN BLURREDVISION
+R24 : IF (SWELLING AND AGITATION(¿Usted presenta agitacion al realizar actividades leves?)) THEN AGITATION
+R25 : IF (SWELLING AND CHESTPAIN(¿Usted presenta dolor en el pecho?)) THEN CHESTPAIN
+R26 : IF (SWELLING AND BALANCELOSS AND HEADACHE AND YELLOWEYES AND BLURREDVISION AND AGITATION AND CHESTPAIN) THEN Colesterol

@@ -1,11 +1,23 @@
 package UI;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import classes.Disease;
+import expertsystem.HumanInterface;
+import expertsystem.IFact;
+import expertsystem.Motor;
+import expertsystem.Rule;
+import repository.DiseaseRepository;
 
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 import java.awt.Image;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 /**
  * Class that represents the user interface of the diagnosis expert system.
@@ -13,17 +25,102 @@ import java.awt.Image;
  * @author Jose Cruz & Camilo Gómez
  * @version 1.0
  */
-public class DiagnosticForm extends javax.swing.JFrame {
+public class DiagnosticForm extends javax.swing.JFrame implements HumanInterface {
+
+    Motor motor = new Motor(this);
+    List<String> allRules = new ArrayList<String>();
+    List<Disease> diseases = new ArrayList<Disease>();
+    private final JFileChooser openFileChooser;
 
     /**
      * Creates new form formularioSE
      */
     public DiagnosticForm() {
         initComponents();
-        setTitle("Sistema Experto de Diagnostico de Enfermedades");
-        setResizable(false);
-        this.setLocationRelativeTo(null);
-        texto.setEditable(false);
+        openFileChooser = new JFileChooser();
+        openFileChooser.setCurrentDirectory(
+                new File("D:\\Archivos de la U\\Semestre X\\Inteligentes I\\DiagnosticSystem\\assets"));
+        openFileChooser.setFileFilter(new FileNameExtensionFilter("Archivos TXT", "txt"));
+
+        this.diseases = new DiseaseRepository().addDiseases();
+    }
+
+    @Override
+    public int askIntValue(String question) {
+        int value = JOptionPane.showConfirmDialog(rootPane, question, null, YES_NO_OPTION);
+
+        return value;
+    }
+
+    @Override
+    public boolean askBoolValue(String question) {
+        boolean value = JOptionPane.showConfirmDialog(rootPane, question, null, YES_NO_OPTION) == 0 ? true : false;
+
+        return value;
+    }
+
+    /**
+     * this method show the result of the diagnosis
+     * 
+     * @param facts 
+     *          the facts that the diagnosis expert system has found
+     */
+    @Override
+    public void printFacts(List<IFact> facts) {
+        String res;
+        String fact = facts.get(facts.size() - 1).getName().split(" ")[0];
+        final String factName = fact;
+
+        if (!diseases.stream().anyMatch(disease -> disease.getName().equals(factName))) {
+            fact = "";
+            for (Disease disease : diseases) {
+                if (disease.getSymptoms().stream()
+                        .filter(symptom -> facts.stream()
+                                .distinct()
+                                .filter(factSymptom -> factSymptom.getValue().equals(true))
+                                .anyMatch(factSymptom -> symptom.toString().equals(factSymptom.getName())))
+                        .count() >= disease.getSymptoms().size() * 0.5) {
+                    fact = disease.getName();
+                    break;
+                }
+            }
+        }
+
+        if (!fact.equals("")) {
+            res = "----------------------------------------------------\n"
+                    + "-  Expert System of Diseases Diagnostic             \n"
+                    + "-    Systems Engineering                            \n"
+                    + "----------------------------------------------------\n"
+                    + "-         DIAGNOSTIC                                \n"
+                    + "----------------------------------------------------\n"
+                    + "- Based on your symptoms, probably                  \n"
+                    + "- you have " + fact + "                             \n"
+                    + "----------------------------------------------------";
+        } else {
+            res = "----------------------------------------------------\n"
+                    + "-  Expert System of Diseases Diagnostic             \n"
+                    + "-    Systems Engineering                            \n"
+                    + "----------------------------------------------------\n"
+                    + "-         DIAGNOSTIC                                \n"
+                    + "----------------------------------------------------\n"
+                    + "- There aren't the needed info for                  \n"
+                    + "- diagnose your disease                             \n"
+                    + "----------------------------------------------------";
+        }
+        // System.out.println(res);
+
+        // JOptionPane.showMessageDialog(null, res);
+        texto.setText(res);
+    }
+
+    // Muestra las reglas contenidas en la base
+    @Override
+    public void printRules(List<Rule> rules) {
+        String res = "";
+        for (Rule r : rules) {
+            res += r.toString() + "\n";
+        }
+        System.out.println(res);
     }
 
     /**
@@ -31,7 +128,8 @@ public class DiagnosticForm extends javax.swing.JFrame {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -40,7 +138,6 @@ public class DiagnosticForm extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         texto = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
@@ -48,81 +145,94 @@ public class DiagnosticForm extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        loadFile = new javax.swing.JButton();
+        resolve = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(51, 204, 255));
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.white, java.awt.Color.gray));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED,
+                java.awt.Color.white, java.awt.Color.gray));
 
         jLabel1.setFont(new java.awt.Font("Eras Demi ITC", 0, 18)); // NOI18N
-        jLabel1.setText("Bienvenido al Sistema Experto");
+        jLabel1.setText("Welcome to the Expert System");
 
         jLabel2.setFont(new java.awt.Font("Freestyle Script", 0, 30)); // NOI18N
-        jLabel2.setText("Diagnostico de Enfermedades");
-        
-        jLabel4.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/img/Doctor.png")).getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH))); // NOI18N
+        jLabel2.setText("Diseases Diagnostic");
+
+        jLabel4.setIcon(new ImageIcon(new ImageIcon(getClass().getResource("/img/Doctor.png")).getImage()
+                .getScaledInstance(120, 120, Image.SCALE_SMOOTH))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Freestyle Script", 0, 24)); // NOI18N
-        jLabel5.setText("Diabetes -Gastritis-Colesterol");
+        jLabel5.setText("Diabetes - Gastritis - Colesterol");
+
+        loadFile.setText("Load Rules");
+        loadFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadFileActionPerformed(evt);
+            }
+        });
+
+        resolve.setText("Execute System");
+        resolve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resolveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 142,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 272,
+                                                javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addGap(12, 12, 12)
+                                                .addGroup(jPanel1Layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                                                243, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
         jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(36, 36, 36))
-        );
+                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel5)
+                                .addGap(36, 36, 36)));
 
         jPanel2.setBackground(new java.awt.Color(51, 204, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.white, java.awt.Color.gray));
-
-        jButton1.setText("Empezar Examen");
-        jButton1.setToolTipText("Clic para comenzar el examen");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED,
+                java.awt.Color.white, java.awt.Color.gray));
 
         texto.setColumns(20);
         texto.setRows(5);
         jScrollPane1.setViewportView(texto);
 
-        jLabel6.setText("Para comenzar el examen dar clic");
+        jLabel6.setText("To proceed with the exam, please click on load rules");
 
-        jLabel3.setText("en el boton Empezar Examen");
+        jLabel3.setText("upload the rules file for the exam, then, click on execute");
 
-        jLabel7.setText("responda todas las preguntas y");
+        jLabel7.setText("Please answer all the questions and after this you will have the results of the exam");
 
-        jLabel8.setText("tendra en resultado inmediatamente");
-
-        jButton2.setText("Salir");
-        jButton2.setToolTipText("Clic para salir");
+        jButton2.setText("Exit");
+        jButton2.setToolTipText("Click here for exit");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -132,183 +242,122 @@ public class DiagnosticForm extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
-                .addGap(3, 3, 3)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 227,
+                                                Short.MAX_VALUE)
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(loadFile)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(resolve)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButton2)))
+                                .addGap(3, 3, 3)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265,
+                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap()));
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(jButton2)))
-                    .addComponent(jScrollPane1))
-                .addContainerGap())
-        );
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 18,
+                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel7)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel8)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38,
+                                                        Short.MAX_VALUE)
+                                                .addGroup(jPanel2Layout
+                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(loadFile)
+                                                        .addComponent(resolve)
+                                                        .addComponent(jButton2)))
+                                        .addComponent(jScrollPane1))
+                                .addContainerGap()));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE,
+                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int u,d,t;
-          
-        u = JOptionPane.showConfirmDialog(rootPane,"¿Usted presenta orina constante?", null, YES_NO_OPTION);
-                
-        if(u == 0){
-            diabetes();
-        }
-        else if(u == 1){
-          d = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta ardor en el estomago?", null, YES_NO_OPTION);  
-            if(d == 0){
-                gastritis();
-            }
-            else if(d==1){
-                t = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta hinchazon en extremidades?", null, YES_NO_OPTION);
-                    if(t == 0){
-                        colesterol();
-                    }
-                    else if(t == 1){
-                        JOptionPane.showMessageDialog(rootPane, "Usted no presenta ninguna de las 3 enfermedades", null, YES_NO_OPTION);
-                    }
-            }
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void resolveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resolveActionPerformed
+        motor.solve(); // TODO add your handling code here:
+    }
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-         System.exit(0);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void loadFileActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loadFileActionPerformed
+        int returnValue = openFileChooser.showOpenDialog(this);
 
-    
-    private void diabetes(){
-      int u,d,t,c,ci,se;
-      
-      u = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta sed constante?", null, YES_NO_OPTION);
-      d = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta hambre excesiva?", null, YES_NO_OPTION);
-      t = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta perdida de peso inesplicable?", null, YES_NO_OPTION);
-      c = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta aumento de fatiga y debilidad?", null, YES_NO_OPTION);
-      ci = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta irritación?", null, YES_NO_OPTION);
-      se = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta visión borrosa?", null, YES_NO_OPTION);
-      
-      if((u==0) && (d==0) && (t==0) && (c==0) && (ci==0) && (se==0)){
-           String dg = "----------------------------------------------------\n"
-                     + "-  Sistema Experto de diagnostico                   \n"
-                     + "-    ingenieria de sistemas                         \n"
-                     + "----------------------------------------------------\n"
-                     + "-         DIAGNOSTICO                               \n"
-                     + "----------------------------------------------------\n"
-                     + "- lo que usted presenta es DIABETES                 \n"
-                     + "----------------------------------------------------";
-           
-           texto.setText(dg);
-      }
-      else{
-          gastritis();
-      }
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File file = openFileChooser.getSelectedFile();
+            try {
+                Scanner myReader = new Scanner(file, "UTF-8");
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    allRules.add(data);
+                    motor.addRule(data);
+                }
+                myReader.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No file was selected.");
+        }
+
+        String text = "";
+        for (String rule : allRules) {
+            text += rule + "\n";
+        }
+
+        texto.setText(text); // TODO add your handling code here:
     }
-    
-    private void gastritis(){
-      int u,d,t,c,ci,se,si,oc ;  
-      
-      u = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta perdida de peso?", null, YES_NO_OPTION);
-      d = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta nauseas?", null, YES_NO_OPTION);
-      t = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta hipo?", null, YES_NO_OPTION);
-      c = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta eructos?", null, YES_NO_OPTION);
-      ci = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta gases?", null, YES_NO_OPTION);
-      se = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta mal sabor de boca?", null, YES_NO_OPTION); 
-      si = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta vomitos?", null, YES_NO_OPTION);
-      oc = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta sensacion de vacio gastrico?", null, YES_NO_OPTION);
-      
-      if((u==0) && (d==0) && (t==0) && (c==0) && (ci==0) && (se==0) && (si==0) && (oc==0)){
-           String dg = "----------------------------------------------------\n"
-                     + "-  Sistema Experto de diagnostico                   \n"
-                     + "-    ingenieria de sistemas                         \n"
-                     + "----------------------------------------------------\n"
-                     + "-         DIAGNOSTICO                               \n"
-                     + "----------------------------------------------------\n"
-                     + "- lo que usted presenta es GASTRITIS                \n"
-                     + "----------------------------------------------------";
-           
-          texto.setText(dg);
-      }
-      else{
-          colesterol();
-      }
-    }
-    
-    private void colesterol(){
-       int u,d,t,c,ci,se;
-       
-       u = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta perdida de equilibrio o mareo?", null, YES_NO_OPTION);
-       d = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta dolor de cabeza?", null, YES_NO_OPTION);
-       t = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta ojos amarillos?", null, YES_NO_OPTION);
-       c = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta visión borrosa?", null, YES_NO_OPTION);
-       ci = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta agitacion al presentar actividades leves?", null, YES_NO_OPTION); 
-       se = JOptionPane.showConfirmDialog(rootPane, "¿Usted presenta dolor en el pecho?", null, YES_NO_OPTION);
-       
-       if((u==0) && (d==0) && (t==0) && (c==0) && (ci==0) && (se==0)){
-            String dg = "----------------------------------------------------\n"
-                     + "-  Sistema Experto de diagnostico                    \n"
-                     + "-    ingenieria de sistemas                          \n"
-                     + "-----------------------------------------------------\n"
-                     + "-         DIAGNOSTICO                                \n"
-                     + "-----------------------------------------------------\n"
-                     + "- lo que usted presenta es COLESTEROL                \n"
-                     + "-----------------------------------------------------";
-            
-           texto.setText(dg); 
-       }
-       else{
-           diabetes();
-       }
-    }
-    
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_jButton2ActionPerformed
+        System.exit(0);
+    }// GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -318,15 +367,19 @@ public class DiagnosticForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(DiagnosticForm.class.getName()).log(java.util.logging.Level.SEVERE, null,
+                    ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -337,7 +390,6 @@ public class DiagnosticForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -351,6 +403,7 @@ public class DiagnosticForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea texto;
+    private javax.swing.JButton loadFile;
+    private javax.swing.JButton resolve;
     // End of variables declaration//GEN-END:variables
 }
-

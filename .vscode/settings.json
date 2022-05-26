@@ -3,6 +3,6 @@
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "c:\\Users\\josed\\Downloads\\ExpertSystemLib.jar"
+        "c:\\Users\\josed\\Downloads\\ExpertSystemLib\\ExpertSystemLib.jar"
     ]
 }
